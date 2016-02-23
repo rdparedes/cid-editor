@@ -3,6 +3,16 @@ require "../styles/index"
 _ = require "underscore"
 $ = require "jquery"
 
+initialHtml = "<!DOCTYPE html>\n" +
+              "<html>\n" +
+              "<head>\n" +
+              "\t<title></title>\n" +
+              "\t<style>\n\n\t</style>\n" +
+              "</head>\n" +
+              "<body>\n\n" + 
+              "</body>\n" +
+              "</html>"
+
 ace = require "brace"
 require "brace/mode/html"
 require "brace/theme/vibrant_ink"
@@ -99,8 +109,10 @@ class App
     canvas
 
   loadContent: ->
-    return unless (content = localStorage["content"])
-    @editor.setValue content, -1
+    if (localStorage["content"])
+      @editor.setValue localStorage["content"], -1
+    else
+      @editor.setValue initialHtml, -1
 
   saveContent: =>
     localStorage["content"] = @editor.getValue()
