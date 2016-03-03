@@ -122,7 +122,23 @@ gulp
       throw new $.util.PluginError("webpack:build", err) if err
       done()
 
-  .task "serve", ["copy-assets", "webpack-dev-server"], ->
+  .task "serve", ["copy-assets"], ->
+    console.log(process.argv)
+    console.log(config.serverPort)
+    config.serverPort = process.argv[4]
+    console.log(config.serverPort)
+
+    server = new WebpackDevServer webpackers.development,
+      contentBase: config.paths.tmp
+      hot: true
+      watchDelay: 100
+      noInfo: true
+
+    server.listen config.serverPort, "0.0.0.0", (err) ->
+      throw new $.util.PluginError("webpack-dev-server", err) if err
+      $.util.log $.util.colors.green(
+        "[webpack-dev-server] Server running on http://localhost:#{config.serverPort}")
+
     gulp.watch ["app/assets/**"], ["copy-assets"]
 
   .task "inline", ->
